@@ -10,6 +10,11 @@
       "StackName": "amplify-opentalk-dev-211408",
       "StackId": "arn:aws:cloudformation:eu-west-2:003392070465:stack/amplify-opentalk-dev-211408/8199de20-11aa-11ec-ab63-06be2aea56f8",
       "AmplifyAppId": "d3k96qwkr4stbg"
+    },
+    "categories": {
+      "auth": {
+        "opentalkc301982fc301982f": {}
+      }
     }
   }
 }

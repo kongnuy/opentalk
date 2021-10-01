@@ -1,0 +1,86 @@
+type Category @model {
+  id: ID!
+  name: String!
+  image: String!
+  description: String
+}
+type Profile @model {
+  id: ID!
+  userId: String!
+  username: String!
+  alias: String!
+  image: String!
+  name: String
+  imageKey: String
+  posts: [Post] @connection(keyName: "byProfile", fields: ["id"])
+  comments: [Comment] @connection(keyName: "byProfile", fields: ["id"])
+  likes: [Like] @connection(keyName: "byProfile", fields: ["id"])
+  responses: [CommentResponse] @connection(keyName: "byProfile", fields: ["id"])
+}
+type UserCategory @model {
+  id: ID!
+  userId: String!
+  categoryId: String!
+}
+type UserFollowing @model {
+  id: ID!
+  userId: String!
+  profileId: String!
+}
+type UserFollower @model {
+  id: ID!
+  userId: String!
+  profileId: String!
+}
+type Like
+  @model
+  @key(name: "byPost", fields: ["postId"])
+  @key(name: "byProfile", fields: ["profileId"])
+  @key(name: "byComment", fields: ["commentId"])
+  @key(name: "byResponse", fields: ["responseId"]) {
+  id: ID!
+  profileId: ID!
+  postId: ID
+  profile: Profile @connection(fields: ["profileId"])
+  post: Post @connection(fields: ["postId"])
+  comment: Comment @connection(fields: ["commentId"])
+  response: CommentResponse @connection(fields: ["responseId"])
+  commentId: ID
+  responseId: ID
+}
+type CommentResponse
+  @model
+  @key(name: "byProfile", fields: ["profileId"])
+  @key(name: "byComment", fields: ["commentId"]) {
+  id: ID!
+  profileId: ID!
+  commentId: ID!
+  text: String!
+  comment: Comment @connection(fields: ["commentId"])
+  profile: Profile @connection(fields: ["profileId"])
+  likes: [Like] @connection(keyName: "byResponse", fields: ["id"])
+}
+
+type Comment
+  @model
+  @key(name: "byPost", fields: ["postId"])
+  @key(name: "byProfile", fields: ["profileId"]) {
+  id: ID!
+  text: String
+  profileId: ID!
+  profile: Profile @connection(fields: ["profileId"])
+  post: Post @connection(fields: ["postId"])
+  postId: ID!
+  responses: [CommentResponse] @connection(keyName: "byComment", fields: ["id"])
+  likes: [Like] @connection(keyName: "byComment", fields: ["id"])
+}
+type Post @model @key(name: "byProfile", fields: ["profileId"]) {
+  id: ID!
+  profileId: ID!
+  profile: Profile @connection(fields: ["profileId"])
+  comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
+  img: String
+  text: String
+  public: Boolean
+  likes: [Like] @connection(keyName: "byPost", fields: ["id"])
+}
